@@ -12,7 +12,7 @@ jobs:
   deploy:
     environment:
       name: sb-pages
-      url: https://jsf-${{ GITHUB_HEAD_REF }}.pages.github.io/
+      url: https://jsf-${{ github.ref_name }}.pages.github.io/
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
