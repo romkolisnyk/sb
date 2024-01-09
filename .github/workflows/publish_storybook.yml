@@ -14,10 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to npm
-        run: npm login --registry=https://registry.npmjs.org/
+      - name: Log in to Artifactory
+        run: |
+          echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
+          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+
 
       - id: storybook_publish
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.2
