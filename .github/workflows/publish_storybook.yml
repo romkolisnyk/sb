@@ -8,9 +8,6 @@ permissions:
   pages: write
   id-token: write
 
-env:
-  STORYBOOK_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,7 +17,6 @@ jobs:
       - id: storybook_publish
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.2
         with:
+          npmrc: ${{ secrets.STORYBOOK_TOKEN }}
           path: storybook-static
           checkout: false
-        env:
-          NODE_AUTH_TOKEN: ${{ env.STORYBOOK_TOKEN }}
