@@ -14,9 +14,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Log in to npm
+        run: npm login --registry=https://registry.npmjs.org/
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+
       - id: storybook_publish
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.2
         with:
-          npmrc: ${{ secrets.STORYBOOK_TOKEN }}
           path: storybook-static
           checkout: false
