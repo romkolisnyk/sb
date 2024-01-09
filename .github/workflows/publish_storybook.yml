@@ -8,6 +8,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  STORYBOOK_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,3 +22,5 @@ jobs:
         with:
           path: storybook-static
           checkout: false
+        env:
+          NODE_AUTH_TOKEN: ${{ env.STORYBOOK_TOKEN }}
