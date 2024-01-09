@@ -12,7 +12,7 @@ jobs:
   deploy:
     environment:
       name: sb-pages
-      url: https://jsf-${{ github.ref_slug }}.pages.github.io/
+      url: https://jsf-${{ GITHUB_HEAD_REF }}.pages.github.io/
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,6 @@ jobs:
         env:
           ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
           ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
-
 
       - id: storybook_publish
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.2
