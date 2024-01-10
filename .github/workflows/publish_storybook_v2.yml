@@ -32,7 +32,6 @@ jobs:
       - name: Create Test Folder
         run: |
           mkdir -p test
-        working-directory: ./sb
 
       - name: Commit and Push Test Folder
         run: |
@@ -41,7 +40,6 @@ jobs:
           git add .
           git commit -m "Create test folder on sb branch"
           git push origin HEAD:storybook-builds
-        working-directory: ./sb
 
 #  deploy-github-pages:
 #    runs-on: ubuntu-latest
