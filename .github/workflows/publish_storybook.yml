@@ -3,14 +3,8 @@ name: Publish Storybook to GitHub Pages
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  build-and-deploy:
-    environment:
-      name: github-pages
-      url: https://romkolisnyk.github.io/sb/main/
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -28,9 +22,26 @@ jobs:
           npm install
           npm run build-storybook
 
-      - name: Deploy 🚀
+      - name: Upload artifact and create feature-named folder 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: test
           folder: storybook-static
           target-folder: ${{ github.ref_name }}
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4
