@@ -12,7 +12,7 @@ jobs:
   deploy:
     environment:
       name: sb-pages
-      url: ${{steps.deployment.outputs.page_url}}/${{ github.ref_name }}
+      url: https://romkolisnyk.github.io/sb/${{ github.ref_name }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
