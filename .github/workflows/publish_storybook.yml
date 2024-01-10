@@ -8,6 +8,9 @@ permissions:
 
 jobs:
   build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -30,4 +33,4 @@ jobs:
         with:
           branch: test
           folder: storybook-static
-          target-folder: docs-wow
+          target-folder: ${{ github.ref_name }}
