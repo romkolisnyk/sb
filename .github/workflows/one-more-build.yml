@@ -10,6 +10,13 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      
+    - name: Log in to Artifactory 🔑
+      run: |
+        echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
+      env:
+        ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
+        ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
 
     - name: Install dependencies
       run: npm install
