@@ -4,25 +4,30 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
 
-      - name: Log in to Artifactory
+      - name: Log in to Artifactory 🔑
         run: |
           echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
         env:
           ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
           ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
 
-      - id: storybook_publish
-        uses: bitovi/github-actions-storybook-to-github-pages@v1.0.2
+      - name: Install and Build 🔧
+        run: |
+          npm install
+          npm run build-storybook
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: storybook-static
-          checkout: false
+          branch: test
+          folder: docs-build
+          target-folder: docs
