@@ -10,9 +10,6 @@ permissions:
 
 jobs:
   deploy:
-    environment:
-      name: sb-pages
-      url: https://romkolisnyk.github.io/sb/${{ github.ref_name }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
