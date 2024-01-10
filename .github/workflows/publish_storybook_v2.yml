@@ -29,19 +29,19 @@ jobs:
 #      - name: Copy build to branch folder
 #        run: cp -r storybook-static ${{ github.event_name }}/${{ github.ref_slash }}
 
-      - name: Create publish folder
+      - name: Create Test Folder
         run: |
-          branch_name=$(git rev-parse --abbrev-ref HEAD)
-          folder_name=$(echo "$branch_name" | tr '/' '-')
-          mkdir -p builds/$folder_name
+          mkdir -p test
+        working-directory: ./sb
 
-      - name: Commit and Push Builds Folder
+      - name: Commit and Push Test Folder
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "Create builds folder for $branch_name"
-          git push origin HEAD:builds
+          git commit -m "Create test folder on sb branch"
+          git push origin HEAD:storybook-builds
+        working-directory: ./sb
 
 #  deploy-github-pages:
 #    runs-on: ubuntu-latest
