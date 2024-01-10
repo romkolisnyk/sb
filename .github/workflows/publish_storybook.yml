@@ -7,12 +7,11 @@ permissions:
   contents: write
   pages: write
   id-token: write
-  
+
 jobs:
   build:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -37,14 +36,13 @@ jobs:
           folder: storybook-static
           target-folder: ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           name: github-pages
           path: storybook-static
 
-              
       - name: Upload artifact 2
         uses: actions/upload-artifact@v3
         with:
