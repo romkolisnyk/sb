@@ -3,6 +3,11 @@ name: Deploy Storybook
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-storybook:
     runs-on: ubuntu-latest
@@ -24,10 +29,10 @@ jobs:
         run: npm run build-storybook
 
       - name: Create branch folder
-        run: mkdir ${{ github.event_name }}-builds
+        run: mkdir ${{ github.event_name }}
 
       - name: Copy build to branch folder
-        run: cp -r storybook-static ${{ github.event_name }}-builds/$GITHUB_REF_SLUG
+        run: cp -r storybook-static ${{ github.event_name }}/${{ github.ref_slash }}
 
   deploy-github-pages:
     runs-on: ubuntu-latest
@@ -38,4 +43,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ needs.build-storybook.outputs.run.outputs.build-storybook }}/storybook-static
-          publish_branch: storybook-builds
+          publish_branch: storybook-builds/${{ github.ref_slash }}
