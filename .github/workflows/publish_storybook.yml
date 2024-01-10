@@ -29,5 +29,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: test
-          folder: docs-build
-          target-folder: docs
+          folder: storybook-static
+          target-folder: docs-wow
