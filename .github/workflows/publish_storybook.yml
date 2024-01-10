@@ -5,6 +5,9 @@ on:
 
 jobs:
   build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -28,26 +31,4 @@ jobs:
           branch: test
           folder: storybook-static
           target-folder: ${{ github.ref_name }}
-
-      - name: Upload artifacts 🚀
-        uses: actions/upload-artifact@v1
-        with:
-          name: github-pages
-          path: storybook-static
-
-  deploy:
-    needs: build
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages 🚀
-        id: deployment
-        uses: actions/deploy-pages@v4
+          token: ${{ secrets.GITHUB_TOKEN }}
