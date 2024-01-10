@@ -32,6 +32,7 @@ jobs:
       - name: Create Test Folder
         run: |
           mkdir -p test
+          echo "Hello, this is a test file." > test/testfile.txt
 
       - name: Commit and Push Test Folder
         run: |
