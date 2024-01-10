@@ -8,48 +8,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-#      - name: Log in to Artifactory
-#        run: |
-#          echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
-#        env:
-#          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
-#          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+      - name: Log in to Artifactory
+        run: |
+          echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
+        env:
+          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
+          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
 
-#      - name: Install dependencies
-#        run: npm install
-#
-#      - name: Build Storybook
-#        run: npm run build-storybook
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Storybook
+        run: npm run build-storybook
 
 #      - name: Create branch folder
 #        run: mkdir ${{ github.event_name }}
 
 #      - name: Copy build to branch folder
 #        run: cp -r storybook-static ${{ github.event_name }}/${{ github.ref_slash }}
+#
+#      - name: Create publish folder
+#        run: |
+#          branch_name=$(git rev-parse --abbrev-ref HEAD)
+#          folder_name=$(echo "$branch_name" | tr '/' '-')
+#          mkdir -p builds/$folder_name
+#
+#      - name: Commit and Push Builds Folder
+#        run: |
+#          git config --local user.email "action@github.com"
+#          git config --local user.name "GitHub Action"
+#          git add .
+#          git commit -m "Create builds folder for $branch_name"
+#          git push origin HEAD:builds
 
-      - name: Create Test Folder
-        run: |
-          mkdir -p test
-          echo "Hello, this is a test file." > test/testfile.txt
-
-      - name: Commit and Push Test Folder
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Create test folder on sb branch"
-          git push origin HEAD:storybook-builds
-
-#  deploy-github-pages:
-#    runs-on: ubuntu-latest
-#    needs: build-storybook
-#    steps:
-#      - name: Deploy to GitHub Pages
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: storybook-static
-#          publish_branch: storybook-builds
+  deploy-github-pages:
+    runs-on: ubuntu-latest
+    needs: build-storybook
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: storybook-static
+          publish_branch: storybook-builds
 #          destination_dir: ${{ github.ref_name }}
