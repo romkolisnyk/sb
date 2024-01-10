@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           name: github-pages
-          path: ./_site
+          path: storybook-static
 
               
       - name: Upload artifact 2
