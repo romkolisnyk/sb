@@ -22,12 +22,11 @@ jobs:
           npm install
           npm run build-storybook
 
-      - name: Upload artifact and create feature-named folder 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifacts 🚀
+        uses: actions/upload-artifact@v4
         with:
-          branch: test
-          folder: storybook-static
-          target-folder: ${{ github.ref_name }}
+          name: github-pages
+          path: storybook-static
 
   deploy:
     needs: build
