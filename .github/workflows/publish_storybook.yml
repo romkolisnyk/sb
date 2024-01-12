@@ -5,11 +5,11 @@ on:
 
 jobs:
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout 🛎️
+#        uses: actions/checkout@v4
 
 #      - name: Log in to Artifactory 🔑
 #        run: |
@@ -32,33 +32,33 @@ jobs:
 #          token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
-    needs: build
+#    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to "storybook-pages" branch 🛎️
         uses: actions/checkout@v4
         with:
           ref: storybook-pages
-
-      - name: Create Index File
-        run: |
-          #!/bin/bash
-          echo "<html><body><h2>Storybook builds:</h2><ul>" > index.html
-          for dir in */; do
-            echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
-          done
-          echo "</ul><p>Generated at: $(date)</p></body></html>" >> index.html
-        shell: bash
-
-      - name: Commit and Push
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git add index.html
-          git commit -m "Auto-generate index.html"
-          git push origin HEAD
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Create Index File
+#        run: |
+#          #!/bin/bash
+#          echo "<html><body><h2>Storybook builds:</h2><ul>" > index.html
+#          for dir in */; do
+#            echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
+#          done
+#          echo "</ul><p>Generated at: $(date)</p></body></html>" >> index.html
+#        shell: bash
+#
+#      - name: Commit and Push
+#        run: |
+#          git config user.email "actions@github.com"
+#          git config user.name "GitHub Actions"
+#          git add index.html
+#          git commit -m "Auto-generate index.html"
+#          git push origin storybook-pages
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Upload artifact 📤
 #        uses: actions/upload-pages-artifact@v3
@@ -86,30 +86,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Get Existing Branches
-      id: get_branches
+      id: get-branches
       run: |
-        branches=$(git ls-remote --heads origin | cut -f2 | sed 's/refs\/heads\///')
-        echo "::set-output name=branches::$branches"
+        branches=($(git for-each-ref --format '%(refname:short)' refs/heads/))
+        echo "BRANCHES=$branches" >> $GITHUB_ENV
 
-    - name: Compare and Delete Folders
-      run: |
-        storybook-pages_branch="storybook-pages"
-        existing_branches="${{ steps.get_branches.outputs.branches }}"
-        
-        for branch in $existing_branches; do
-          if [[ "$branch" != "$storybook-pages_branch" ]]; then
-            if [[ -d "$branch" ]]; then
-              echo "Deleting folder: $branch"
-              rm -rf $branch
-            fi
-          fi
-        done
-        
-        if [[ "$changes" == "true" ]]; then
-            git add -A
-            git commit -m "Remove folders"
-            git push origin HEAD
-        else
-          echo "No changes, skipping commit and push."
-        fi
-      shell: bash
+#    - name: Compare and Delete Folders
+#      run: |
+#        for branch in $BRANCHES; do
+#          if [[ "$branch" != "storybook-pages" ]]; then
+#            if [[ -d "$branch" ]]; then
+#              echo "Deleting folder: $branch"
+#              rm -rf $branch
+#            fi
+#          fi
+#        done
+#
+#        if [[ "$changes" == "true" ]]; then
+#            git add -A
+#            git commit -m "Remove folders"
+#            git push origin storybook-pages
+#        else
+#          echo "No changes, skipping commit and push."
+#        fi
+#      shell: bash
