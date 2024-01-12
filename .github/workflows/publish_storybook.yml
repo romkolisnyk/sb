@@ -31,6 +31,9 @@ jobs:
           target-folder: ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+  create_artifact:
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout to "storybook-pages" branch 🛎️
         uses: actions/checkout@v4
         with:
