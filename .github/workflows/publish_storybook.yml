@@ -23,15 +23,12 @@ jobs:
           npm install
           npm run build-storybook
 
-      - name: Set branch name 🌱
-        run: echo "BRANCH_NAME=$(basename ${{ github.ref_name }})" >> $GITHUB_ENV
-
       - name: Put the build into branch-named folder 📂
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: storybook-pages
           folder: storybook-static
-          target-folder: ${{ env.BRANCH_NAME }}
+          target-folder: "$(basename ${{ github.ref_name }})"
           token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
