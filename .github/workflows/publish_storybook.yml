@@ -47,7 +47,7 @@ jobs:
           for dir in */; do
             echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
           done
-          echo "</ul></body></html>" >> index.html
+          echo "</ul><p>Generated at: $(date)</p></body></html>" >> index.html
         shell: bash
 
       - name: Commit and Push
