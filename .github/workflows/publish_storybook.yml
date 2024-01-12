@@ -5,95 +5,95 @@ on:
 
 jobs:
 
-#  build:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout 🛎️
-#        uses: actions/checkout@v4
-
-#      - name: Log in to Artifactory 🔑
-#        run: |
-#          echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
-#        env:
-#          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
-#          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
-#
-#      - name: Install and Build SB 🛠️
-#        run: |
-#          npm install
-#          npm run build-storybook
-#
-#      - name: Put the build into branch-named folder 📂
-#        uses: JamesIves/github-pages-deploy-action@v4
-#        with:
-#          branch: storybook-pages
-#          folder: storybook-static
-#          target-folder: $(basename ${{ github.ref }})
-#          token: ${{ secrets.GITHUB_TOKEN }}
-
-#  create_artifact:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout to "storybook-pages" branch 🛎️
-#        uses: actions/checkout@v4
-#        with:
-#          ref: storybook-pages
-#
-#      - name: Create Index File
-#        run: |
-#          #!/bin/bash
-#          echo "<html><body><h2>Storybook builds:</h2><ul>" > index.html
-#          for dir in */; do
-#            echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
-#          done
-#          echo "</ul><p>Generated at: $(date)</p></body></html>" >> index.html
-#        shell: bash
-#
-#      - name: Commit and Push
-#        run: |
-#          git config user.email "actions@github.com"
-#          git config user.name "GitHub Actions"
-#          git add index.html
-#          git commit -m "Auto-generate index.html"
-#          git push origin storybook-pages
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#      - name: Upload artifact 📤
-#        uses: actions/upload-pages-artifact@v3
-#        with:
-#          name: github-pages
-#          path: ./
-
-#  deploy:
-#    needs: create_artifact
-#    permissions:
-#      pages: write
-#      id-token: write
-#    environment:
-#      name: github-pages
-#      url: ${{ steps.deployment.outputs.page_url }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Deploy to GitHub Pages 🚀
-#        id: deployment
-#        uses: actions/deploy-pages@v4
-#        with:
-#          artifact_name: github-pages
-
-  delete_redundant_builds:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout 🛎️
-      uses: actions/checkout@v4
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
 
-    - name: Get Existing Branches
-      id: get-branches
-      run: |
-        branches=($(git for-each-ref --format '%(refname:short)' refs/heads/))
-        echo "BRANCHES=${branches[@]}" >> $GITHUB_ENV
+      - name: Log in to Artifactory 🔑
+        run: |
+          echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
+        env:
+          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
+          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
 
+      - name: Install and Build SB 🛠️
+        run: |
+          npm install
+          npm run build-storybook
+
+      - name: Put the build into branch-named folder 📂
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: storybook-pages
+          folder: storybook-static
+          target-folder: $(basename ${{ github.ref }})
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  create_artifact:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to "storybook-pages" branch 🛎️
+        uses: actions/checkout@v4
+        with:
+          ref: storybook-pages
+
+      - name: Create Index File
+        run: |
+          #!/bin/bash
+          echo "<html><body><h2>Storybook builds:</h2><ul>" > index.html
+          for dir in */; do
+            echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
+          done
+          echo "</ul><p>Generated at: $(date)</p></body></html>" >> index.html
+        shell: bash
+
+      - name: Commit and Push
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add index.html
+          git commit -m "Auto-generate index.html"
+          git push origin storybook-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact 📤
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: ./
+
+  deploy:
+    needs: create_artifact
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages
+
+#  delete_redundant_builds:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Checkout 🛎️
+#      uses: actions/checkout@v4
+#
+#    - name: Get Existing Branches
+#      id: get-branches
+#      run: |
+#        branches=($(git for-each-ref --format '%(refname:short)' refs/heads/))
+#        echo "BRANCHES=${branches[@]}" >> $GITHUB_ENV
+#
 #    - name: Compare and Delete Folders
 #      run: |
 #        for branch in $BRANCHES; do
