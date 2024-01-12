@@ -20,6 +20,8 @@ jobs:
 
   build:
     needs: login
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Install and Build SB 🛠️
