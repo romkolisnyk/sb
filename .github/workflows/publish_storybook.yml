@@ -31,14 +31,14 @@ jobs:
 #          target-folder: $(basename ${{ github.ref }})
 #          token: ${{ secrets.GITHUB_TOKEN }}
 
-  create_artifact:
+#  create_artifact:
 #    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout to "storybook-pages" branch 🛎️
-        uses: actions/checkout@v4
-        with:
-          ref: storybook-pages
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout to "storybook-pages" branch 🛎️
+#        uses: actions/checkout@v4
+#        with:
+#          ref: storybook-pages
 #
 #      - name: Create Index File
 #        run: |
@@ -85,11 +85,14 @@ jobs:
   delete_redundant_builds:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout 🛎️
+      uses: actions/checkout@v4
+
     - name: Get Existing Branches
       id: get-branches
       run: |
         branches=($(git for-each-ref --format '%(refname:short)' refs/heads/))
-        echo "BRANCHES=$branches" >> $GITHUB_ENV
+        echo "BRANCHES=${branches[@]}" >> $GITHUB_ENV
 
 #    - name: Compare and Delete Folders
 #      run: |
