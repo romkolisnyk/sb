@@ -11,25 +11,25 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      - name: Log in to Artifactory 🔑
-        run: |
-          echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
-        env:
-          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
-          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
-
-      - name: Install and Build SB 🛠️
-        run: |
-          npm install
-          npm run build-storybook
-
-      - name: Put the build into branch-named folder 📂
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: storybook-pages
-          folder: storybook-static
-          target-folder: $(basename ${{ github.ref }})
-          token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Log in to Artifactory 🔑
+#        run: |
+#          echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
+#        env:
+#          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
+#          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+#
+#      - name: Install and Build SB 🛠️
+#        run: |
+#          npm install
+#          npm run build-storybook
+#
+#      - name: Put the build into branch-named folder 📂
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          branch: storybook-pages
+#          folder: storybook-static
+#          target-folder: $(basename ${{ github.ref }})
+#          token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
     needs: build
@@ -60,27 +60,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload artifact 📤
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: github-pages
-          path: ./
+#      - name: Upload artifact 📤
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#          name: github-pages
+#          path: ./
 
-  deploy:
-    needs: create_artifact
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages 🚀
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages
+#  deploy:
+#    needs: create_artifact
+#    permissions:
+#      pages: write
+#      id-token: write
+#    environment:
+#      name: github-pages
+#      url: ${{ steps.deployment.outputs.page_url }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Deploy to GitHub Pages 🚀
+#        id: deployment
+#        uses: actions/deploy-pages@v4
+#        with:
+#          artifact_name: github-pages
 
   delete_redundant_builds:
     runs-on: ubuntu-latest
