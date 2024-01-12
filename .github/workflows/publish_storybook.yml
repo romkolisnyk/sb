@@ -31,6 +31,26 @@ jobs:
           target-folder: ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Create Index File
+        run: |
+          #!/bin/bash
+          echo "<html><body><h2>Directory Listing</h2><ul>" > index.html
+          for dir in */; do
+            echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
+          done
+          echo "</ul></body></html>" >> index.html
+        shell: bash
+
+      - name: Commit and Push
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add index.html
+          git commit -m "Auto-generate index.html"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkout to "storybook-pages" branch 🛎️
         uses: actions/checkout@v4
         with:
