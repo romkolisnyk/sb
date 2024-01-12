@@ -28,7 +28,7 @@ jobs:
         with:
           branch: storybook-pages
           folder: storybook-static
-          target-folder: ${{ github.ref_name }}
+          target-folder: $(basename ${{ github.ref }})
           token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
@@ -43,7 +43,7 @@ jobs:
       - name: Create Index File
         run: |
           #!/bin/bash
-          echo "<html><body><h2>Directory Listing</h2><ul>" > index.html
+          echo "<html><body><h2>Storybook builds:</h2><ul>" > index.html
           for dir in */; do
             echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
           done
@@ -56,7 +56,7 @@ jobs:
           git config user.name "GitHub Actions"
           git add index.html
           git commit -m "Auto-generate index.html"
-          git push origin HEAD -f
+          git push origin HEAD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -77,12 +77,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages 🚀
+        id: deployment
         uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages
 
-      - name: Debug Deployment
-        run: |
-          echo "Page URL: ${{ steps.deployment.outputs.page_url }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  delete_redundant_builds:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get Existing Branches
+      id: get_branches
+      run: |
+        branches=$(git ls-remote --heads origin | cut -f2 | sed 's/refs\/heads\///')
+        echo "::set-output name=branches::$branches"
+
+    - name: Compare and Delete Folders
+      run: |
+        storybook-pages_branch="storybook-pages"
+        existing_branches="${{ steps.get_branches.outputs.branches }}"
+        
+        for branch in $existing_branches; do
+          if [[ "$branch" != "$storybook-pages_branch" ]]; then
+            if [[ -d "$branch" ]]; then
+              echo "Deleting folder: $branch"
+              rm -rf $branch
+            fi
+          fi
+        done
+        
+        if [[ "$changes" == "true" ]]; then
+            git add -A
+            git commit -m "Remove folders"
+            git push origin HEAD
+        else
+          echo "No changes, skipping commit and push."
+        fi
+      shell: bash
