@@ -28,7 +28,7 @@ jobs:
         with:
           branch: storybook-pages
           folder: storybook-static
-          target-folder: ${{ github.ref_name }}
+          target-folder: $(basename ${{ github.ref_name }})
           token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
