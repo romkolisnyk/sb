@@ -43,7 +43,10 @@ jobs:
         with:
           ref: storybook-pages
 
-      - name: Create Index File
+      - name: Remove folders older than 14 days 🗑️
+        run: find . -maxdepth 1 -type d -ctime +14 -exec rm -rf {} \;
+
+      - name: Create Index File 📄
         run: |
           #!/bin/bash
           echo "<html><body><h2>Storybook builds:</h2><ul>" > index.html
@@ -53,12 +56,12 @@ jobs:
           echo "</ul><p>Generated at: $(date)</p></body></html>" >> index.html
         shell: bash
 
-      - name: Commit and Push
+      - name: Commit and Push 🪄
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git add index.html
-          git commit -m "Auto-generate index.html"
+          git commit -m "Update index.html & remove old builds"
           git push origin storybook-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,35 +87,3 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages
-
-#  delete_redundant_builds:
-#    runs-on: ubuntu-latest
-#    steps:
-#    - name: Checkout 🛎️
-#      uses: actions/checkout@v4
-#
-#    - name: Get Existing Branches
-#      id: get-branches
-#      run: |
-#        branches=($(git for-each-ref --format '%(refname:short)' refs/heads/))
-#        echo "BRANCHES=${branches[@]}" >> $GITHUB_ENV
-#
-#    - name: Compare and Delete Folders
-#      run: |
-#        for branch in $BRANCHES; do
-#          if [[ "$branch" != "storybook-pages" ]]; then
-#            if [[ -d "$branch" ]]; then
-#              echo "Deleting folder: $branch"
-#              rm -rf $branch
-#            fi
-#          fi
-#        done
-#
-#        if [[ "$changes" == "true" ]]; then
-#            git add -A
-#            git commit -m "Remove folders"
-#            git push origin storybook-pages
-#        else
-#          echo "No changes, skipping commit and push."
-#        fi
-#      shell: bash
