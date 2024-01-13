@@ -43,8 +43,8 @@ jobs:
         with:
           ref: storybook-pages
 
-      - name: Remove folders older than 14 days 🗑️
-        run: find . -maxdepth 1 -type d -ctime +14 -exec rm -rf {} \;
+      - name: Remove builds older than 14 days 🗑️
+        run: find . -maxdepth 1 -type d -ctime +14 -not -name 'main' -exec rm -rf {} \;
 
       - name: Create Index File 📄
         run: |
