@@ -69,9 +69,11 @@ jobs:
         run: |
           for folder in $(find . -type d -not -path "*/.git*"); do
             folder_age=$(stat -c %Y "$folder")
-            if [ "$folder_age" -lt "$((CURRENT_DATE - 14 * 86400))" ]; then
+            if [ "$folder_age" -lt "$((CURRENT_DATE - 1 * 86400))" ]; then
               echo "Deleting folder: $folder"
             fi
+            echo "Folder: $folder"
+            echo "Last modified at: $folder_age"
           done
 #      - name: Create Index File 📄
 #        run: |
