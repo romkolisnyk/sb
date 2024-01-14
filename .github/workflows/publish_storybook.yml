@@ -67,19 +67,14 @@ jobs:
       - name: Get folder age
         run: |
           for folder in */; do
-            index_html="$folder/index.html"
-            if [ -f "$index_html" ]; then
-              modified_time=$(stat -c %Y "$index_html")
-              current_time=$(date +%s)
-              age=$(( (current_time - modified_time) / 86400 ))
+            commit_date=$(git log -1 --format="%at" -- "$folder")
+            current_time=$(date +%s)
+            age=$(( (current_time - commit_date) / 86400 ))
 
-              if [ $age -gt 1 ]; then
-                echo "Видаляємо папку: $folder, Час змін: $((age)) днів"
-              else
-                echo "Папка: $folder, Час змін: $((age)) днів - не видаляється"
-              fi
+            if [ $age -gt 1 ]; then
+              echo "Видаляємо папку: $folder, Час останнього коміту: $((age)) днів тому"
             else
-              echo "Папка: $folder, Файл index.html не знайдений"
+              echo "Папка: $folder, Час останнього коміту: $((age)) днів тому - не видаляється"
             fi
             echo "Історія змін для папки: $folder"
             git log -- "$folder"
