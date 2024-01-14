@@ -64,10 +64,10 @@ jobs:
 #            done
 
       - name: Get current date
-        run: echo 'CURRENT_DATE=$(date +%s)' >> $GITHUB_ENV
+        run: echo "CURRENT_DATE=$(date +%s)" >> $GITHUB_ENV
       - name: Get folder age
         run: |
-          for folder in $(find . -type d -not -path '*/.git*'); do
+          for folder in $(find . -type d -not -path "*/.git*"); do
             folder_age=$(stat -c %Y "$folder")
             if [ "$folder_age" -lt "$((CURRENT_DATE - 14 * 86400))" ]; then
               echo "Deleting folder: $folder"
