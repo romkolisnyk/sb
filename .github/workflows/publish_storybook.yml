@@ -61,12 +61,12 @@ jobs:
       - name: Create Index File 📄
         run: |
           #!/bin/bash
-          echo "<html><body><h2>Storybook builds</h2><table border='1'><tr><th>Build Name</th><th>Created</th></tr>" > index.html
+          echo "<html><body><h2>Storybook builds</h2><table style='font-size:24px' border='1'><tr><th style='padding:12px'>Build Name</th><th style='padding:12px'>Created</th></tr>" > index.html
           for dir in */; do
             commit_date=$(git log -1 --format="%at" -- "$dir")
             commit_date_gmt2=$(TZ="Europe/Kyiv" date -d "@$commit_date" +"%d-%m-%Y %H:%M")
           
-            echo "<tr><td style='padding: 12px; font-size: 24px;'><a href=\"$dir\">$dir</a></td><td>$commit_date_gmt2</td></tr>" >> index.html
+            echo "<tr><td style='padding:12px'><a href=\"$dir\">$dir</a></td><td style='padding:12px'>$commit_date_gmt2</td></tr>" >> index.html
           done
           echo "</table></body></html>" >> index.html
           echo "Index file successfully updated!"
