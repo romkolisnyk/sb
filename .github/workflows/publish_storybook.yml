@@ -69,8 +69,9 @@ jobs:
           for folder in */; do
             if [ "$folder" != "main/" ]; then
               commit_date=$(git log -1 --format="%at" -- "$folder")
+              commit_date_gmt2=$(TZ="GMT+2" date -d "@$commit_date" +%s)
               current_time=$(date +%s)
-              age=$(( (current_time - commit_date) / 86400 ))
+              age=$(( (current_time - commit_date_gmt2) / 86400 ))
 
               if [ $age -ge 1 ]; then
                 echo "Deleting build: $folder because it is $((age)) days old"
