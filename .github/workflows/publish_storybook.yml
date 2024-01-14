@@ -50,8 +50,8 @@ jobs:
             for dir in $(find . -maxdepth 1 -type d); do
               [ -d "$dir" ] || continue
           
-              LAST_MODIFIED_TIMESTAMP=$(git log -1 --format="%at" -- "$dir")
-              if [ "$LAST_MODIFIED_TIMESTAMP" -lt "$X_DAYS_AGO_TIMESTAMP" ]; then
+              LAST_MODIFIED_TIMESTAMP=$(git log -1 --format="%at" -- $dir | head -n 1)
+              if [ -n "$LAST_MODIFIED_TIMESTAMP" ] && [ "$LAST_MODIFIED_TIMESTAMP" -lt "$X_DAYS_AGO_TIMESTAMP" ]; then
                 echo -e "\nRemoving $dir last modified at $(date -d "@$LAST_MODIFIED_TIMESTAMP")"
                 git rm --quiet -r "$dir"
               fi
