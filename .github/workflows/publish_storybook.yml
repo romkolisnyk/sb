@@ -70,10 +70,6 @@ jobs:
             current_time=$(date +%s)
             age=$(( (current_time - modified_time) / 86400 ))
             echo "Видаляємо папку: $folder, Час змін: $age днів"
-
-#            if [ $age -gt 1 ]; then
-#              echo "Видаляємо папку: $folder, Час змін: $age днів"
-#            fi
           done
 #      - name: Create Index File 📄
 #        run: |
