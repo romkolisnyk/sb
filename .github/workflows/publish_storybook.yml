@@ -17,21 +17,21 @@ jobs:
           ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
           ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
 
-      - name: Install and Build SB 🛠️
-        run: |
-          npm install
-          npm run build-storybook
-
-      - name: Set branch name 🌱
-        run: echo "BRANCH_NAME=$(basename ${{ github.ref_name }})" >> $GITHUB_ENV
-
-      - name: Put the build into branch-named folder 📂
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: storybook-pages
-          folder: storybook-static
-          target-folder: ${{ env.BRANCH_NAME }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Install and Build SB 🛠️
+#        run: |
+#          npm install
+#          npm run build-storybook
+#
+#      - name: Set branch name 🌱
+#        run: echo "BRANCH_NAME=$(basename ${{ github.ref_name }})" >> $GITHUB_ENV
+#
+#      - name: Put the build into branch-named folder 📂
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          branch: storybook-pages
+#          folder: storybook-static
+#          target-folder: ${{ env.BRANCH_NAME }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
     needs: build
@@ -68,24 +68,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload artifact 📤
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: github-pages
-          path: ./
+#      - name: Upload artifact 📤
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#          name: github-pages
+#          path: ./
 
-  deploy:
-    needs: create_artifact
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages 🚀
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages
+#  deploy:
+#    needs: create_artifact
+#    permissions:
+#      pages: write
+#      id-token: write
+#    environment:
+#      name: github-pages
+#      url: ${{ steps.deployment.outputs.page_url }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Deploy to GitHub Pages 🚀
+#        id: deployment
+#        uses: actions/deploy-pages@v4
+#        with:
+#          artifact_name: github-pages
