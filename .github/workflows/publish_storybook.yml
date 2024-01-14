@@ -67,16 +67,15 @@ jobs:
       - name: Get folder age
         run: |
           for folder in */; do
-            commit_date=$(git log -1 --format="%at" -- "$folder")
-            current_time=$(date +%s)
-            age=$(( (current_time - commit_date) / 86400 ))
+            if [ "$folder" != "main/" ]; then
+              commit_date=$(git log -1 --format="%at" -- "$folder")
+              current_time=$(date +%s)
+              age=$(( (current_time - commit_date) / 86400 ))
 
-            if [ $age -gt 1 ]; then
-              echo "Видаляємо папку: $folder, Час останнього коміту: $((age)) днів тому"
-            else
-              echo "Папка: $folder, Час останнього коміту: $((age)) днів тому - не видаляється"
+              if [ $age -ge 1 ]; then
+                echo "Deleting build: $folder because it is $((age)) days old"
+              fi
             fi
-            echo "Історія змін для папки: $folder ($(date -d "@$commit_date" +"%Y-%m-%d %H:%M"))"
           done
 #      - name: Create Index File 📄
 #        run: |
