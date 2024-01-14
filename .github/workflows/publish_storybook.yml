@@ -45,12 +45,16 @@ jobs:
       - name: Remove builds older than 1 days 🗑️
         run: |
           #!/bin/bash
+            IGNORED_FOLDERS=("main" ".git")
             X_DAYS_AGO_TIMESTAMP=$(date -d "$1 days ago" --utc +%s)          
           
             for dir in $(find . -maxdepth 1 -type d); do
+              if [[ " ${IGNORED_FOLDERS[@]} " =~ " ${dir} " ]]; then
+                continue
+              fi
               [ -d "$dir" ] || continue
           
-              LAST_MODIFIED_TIMESTAMP=$(git log -1 --format="%at" -- $dir | head -n 1)
+              LAST_MODIFIED_TIMESTAMP=$(git log -1 --format="%at" -- $dir/* | head -n 1)
               if [ -n "$LAST_MODIFIED_TIMESTAMP" ] && [ "$LAST_MODIFIED_TIMESTAMP" -lt "$X_DAYS_AGO_TIMESTAMP" ]; then
                 echo -e "\nRemoving $dir last modified at $(date -d "@$LAST_MODIFIED_TIMESTAMP")"
                 git rm --quiet -r "$dir"
