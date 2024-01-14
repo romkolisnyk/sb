@@ -43,7 +43,9 @@ jobs:
           ref: storybook-pages
 
       - name: Remove builds older than 1 days 🗑️
-        run: find . -maxdepth 1 -type d -ctime +1 -not -name 'main' -exec rm -rf {} \;
+        run: |
+          deleted_builds=$(find . -maxdepth 1 -type d -ctime +1 -not -name 'main' -exec rm -rf {} \; -print)
+          echo "Deleted builds: $deleted_builds"
 
       - name: Create Index File 📄
         run: |
@@ -53,13 +55,14 @@ jobs:
             echo "<li><a href=\"$dir\">$dir</a></li>" >> index.html
           done
           echo "</ul><p>Generated at: $(date)</p></body></html>" >> index.html
+          echo "Index file successfully updated!"
         shell: bash
 
       - name: Commit and Push 🪄
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git add index.html
+          git add .
           git commit -m "Update index.html & remove old builds"
           git push origin storybook-pages
         env:
