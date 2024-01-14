@@ -48,14 +48,14 @@ jobs:
             X_DAYS_AGO_TIMESTAMP=$(date -d "$1 days ago" +%s)
             
             for dir in */; do
-            echo -n "."
-            [ -d "$dir" ] || continue
+              echo -n "."
+              [ -d "$dir" ] || continue
           
-            LAST_MODIFIED_TIMESTAMP=$(git log -1 --format="%at" -- "$dir")
-            if [ "$LAST_MODIFIED_TIMESTAMP" -lt "$X_DAYS_AGO_TIMESTAMP" ]; then
-              echo -e "\nRemoving $dir last modified at $(date -d "@$LAST_MODIFIED_TIMESTAMP")"
-              git rm --quiet -r "$dir"
-            fi
+              LAST_MODIFIED_TIMESTAMP=$(git log -1 --format="%at" -- "$dir")
+              if [ "$LAST_MODIFIED_TIMESTAMP" -lt "$X_DAYS_AGO_TIMESTAMP" ]; then
+                echo -e "\nRemoving $dir last modified at $(date -d "@$LAST_MODIFIED_TIMESTAMP")"
+                git rm --quiet -r "$dir"
+              fi
             done
 
       - name: Create Index File 📄
