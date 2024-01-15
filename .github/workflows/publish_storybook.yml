@@ -118,4 +118,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           mode: recreate
           message: |
-            ### 🔗 Storybook build available at [this link](${{ steps.deployment.outputs.page_url }}/${{ env.BRANCH_NAME }})
+            ### 🔗 Storybook build available at [this link](${{ steps.deployment.outputs.page_url }})
