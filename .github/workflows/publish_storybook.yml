@@ -63,14 +63,11 @@ jobs:
 
       - name: Create Index File 📄
         run: |
-          directories=($(ls -d */))
-          sorted_directories=(develop "${directories[@]/develop/}")
-          
           echo "<html><body style='font-family:monospace;text-align:center;padding:50px;background:#e3e1dd'><h1>Storybook builds</h1><table style='font-size:20px;text-align:center;width:100%;background:#444;border-radius:4px'><tr style='background:darkseagreen'><th style='padding:12px'>Build Name</th><th style='padding:12px'>Created</th></tr>" > index.html
           
-          for dir in "${sorted_directories[@]}"; do
+          for dir in */; do
             commit_date=$(git log -1 --format="%at" -- "$dir")
-            commit_date_gmt2=$(TZ="Europe/Kyiv" date -d "@${commit_date}" +"%d-%m-%Y %H:%M:%S")
+            commit_date_gmt2=$(TZ="Europe/Kyiv" date -d "@$commit_date" +"%d-%m-%Y %H:%M:%S")
             echo "<tr style='background:#faebd7'><td style='padding:12px'><a href=\"$dir\">$dir</a></td><td style='padding:12px'>$commit_date_gmt2</td></tr>" >> index.html
           done
           
