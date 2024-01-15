@@ -31,7 +31,7 @@ jobs:
           npm run build-storybook
 
       - name: Set name for the build 🌱
-        run: echo "BRANCH_NAME=$(basename ${{ github.ref_name }})" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(basename ${{ github.head_ref || github.ref_name }})" >> $GITHUB_ENV
 
       - name: Put the build into branch-named folder 📂
         uses: JamesIves/github-pages-deploy-action@v4
@@ -100,6 +100,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
+      pull-requests: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
