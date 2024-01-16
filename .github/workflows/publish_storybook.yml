@@ -112,11 +112,14 @@ jobs:
         with:
           artifact_name: github-pages
 
+      - name: Store the build name 🌱
+        run: echo "SB_BUILD_SRC=$(basename ${{ github.head_ref }})" >> $GITHUB_ENV
+
       - name: Add Storybook link to PR 🔗
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
-            ### 🛸 Storybook has been deployed. The build available at [this link 🔗](${{ steps.deployment.outputs.page_url }}${{ github.head_ref#*\/ }})
+            ### 📗 Storybook has been deployed and lives [ _-->_ here _<--_ 🔗](${{ steps.deployment.outputs.page_url }}${{ env.SB_BUILD_SRC }})
           comment_tag: execution
