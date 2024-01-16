@@ -121,5 +121,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
-            ### 📗 Storybook has been deployed and lives [ _-->_ here _<--_ 🔗](${{ steps.deployment.outputs.page_url }}${{ env.BRANCH_NAME }})
+            ### 📗 Storybook has been deployed and lives [ _-->_ here _<--_ 🔗](${{ steps.deployment.outputs.page_url }}${{ env.SB_BUILD_SRC }})
           comment_tag: execution
