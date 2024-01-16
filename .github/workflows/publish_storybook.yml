@@ -112,6 +112,9 @@ jobs:
         with:
           artifact_name: github-pages
 
+      - name: Store the build name 💾
+        run: echo "SB_BUILD_SRC=$(basename ${{ github.head_ref }}  | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Add Storybook link to PR 🔗
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
