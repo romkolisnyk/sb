@@ -96,7 +96,7 @@ jobs:
 #          path: ./
 
   deploy:
-    needs: create_artifact
+#    needs: create_artifact
     permissions:
       pages: write
       id-token: write
