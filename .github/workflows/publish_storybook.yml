@@ -7,7 +7,7 @@ on:
       - 'src/stories/**'
   push:
     branches:
-      - develop
+      - main
     paths:
       - 'src/stories/**'
 
