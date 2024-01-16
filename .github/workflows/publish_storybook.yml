@@ -31,7 +31,7 @@ jobs:
           npm run build-storybook
 
       - name: Set name for the build 🌱
-        run: echo "BRANCH_NAME=$(basename ${{ github.head_ref || github.ref_name }})" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(basename ${{ github.head_ref || github.ref_name }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Put the build into branch-named folder 📂
         uses: JamesIves/github-pages-deploy-action@v4
@@ -112,14 +112,11 @@ jobs:
         with:
           artifact_name: github-pages
 
-      - name: Store the build name 🌱
-        run: echo "SB_BUILD_SRC=$(basename ${{ github.head_ref }})" >> $GITHUB_ENV
-
       - name: Add Storybook link to PR 🔗
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           message: |
-            ### 📗 Storybook has been deployed and lives [ _-->_ here _<--_ 🔗](${{ steps.deployment.outputs.page_url }}${{ env.SB_BUILD_SRC }})
+            ### 📗 Storybook has been deployed and lives [ _-->_ here _<--_ 🔗](${{ steps.deployment.outputs.page_url }}${{ env.BRANCH_NAME }})
           comment_tag: execution
