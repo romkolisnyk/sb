@@ -12,37 +12,37 @@ on:
       - 'src/stories/**'
 
 jobs:
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
-
-      - name: Log in to Artifactory 🔑
-        run: echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
-        env:
-          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
-          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
-
-      - name: Install and Build SB 🛠️
-        run: |
-          npm install
-          npm run build-storybook
-
-      - name: Set name for the build 🌱
-        run: echo "BRANCH_NAME=$(basename ${{ github.head_ref || github.ref_name }})" >> $GITHUB_ENV
-
-      - name: Put the build into branch-named folder 📂
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: storybook-pages
-          folder: storybook-static
-          target-folder: ${{ env.BRANCH_NAME }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+#
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout 🛎️
+#        uses: actions/checkout@v4
+#
+#      - name: Log in to Artifactory 🔑
+#        run: echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
+#        env:
+#          ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
+#          ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+#
+#      - name: Install and Build SB 🛠️
+#        run: |
+#          npm install
+#          npm run build-storybook
+#
+#      - name: Set name for the build 🌱
+#        run: echo "BRANCH_NAME=$(basename ${{ github.head_ref || github.ref_name }})" >> $GITHUB_ENV
+#
+#      - name: Put the build into branch-named folder 📂
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          branch: storybook-pages
+#          folder: storybook-static
+#          target-folder: ${{ env.BRANCH_NAME }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
-    needs: build
+#    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to "storybook-pages" branch 🛎️
@@ -50,53 +50,53 @@ jobs:
         with:
           ref: storybook-pages
           fetch-depth: 0
-
-      - name: Remove builds older than 1 days 🗑️
-        run: |
-          for folder in */; do
-            if [ "$folder" != "main/" ]; then
-              commit_date=$(git log -1 --format="%at" -- "$folder")
-              current_time=$(date +%s)
-              age=$(( (current_time - commit_date) / 86400 ))
-
-              if [ $age -ge 1 ]; then
-                echo "Deleting build: $folder because it is $((age)) days old"
-                rm -rf "$folder"
-              fi
-            fi
-          done
-
-      - name: Create Index File 📄
-        run: |
-          echo "<html><body style='font-family:monospace;text-align:center;padding:50px;background:#e3e1dd'><h1>Storybook builds</h1><table style='font-size:20px;text-align:center;width:100%;background:#444;border-radius:4px'><tr style='background:darkseagreen'><th style='padding:12px'>Build Name</th><th style='padding:12px'>Created</th></tr>" > index.html
-
-          for dir in */; do
-            commit_date=$(git log -1 --format="%at" -- "$dir")
-            commit_date_gmt2=$(TZ="Europe/Kyiv" date -d "@$commit_date" +"%d-%m-%Y %H:%M:%S")
-            echo "<tr style='background:#faebd7'><td style='padding:12px'><a href=\"$dir\">$dir</a></td><td style='padding:12px'>$commit_date_gmt2</td></tr>" >> index.html
-          done
-
-          echo "</table></body></html>" >> index.html
-          echo "Index file successfully updated!"
-
-      - name: Commit and Push 🪄
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git add .
-          git commit -m "Update index.html & remove old builds"
-          git push origin storybook-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload artifact 📤
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: github-pages
-          path: ./
+#
+#      - name: Remove builds older than 1 days 🗑️
+#        run: |
+#          for folder in */; do
+#            if [ "$folder" != "main/" ]; then
+#              commit_date=$(git log -1 --format="%at" -- "$folder")
+#              current_time=$(date +%s)
+#              age=$(( (current_time - commit_date) / 86400 ))
+#
+#              if [ $age -ge 1 ]; then
+#                echo "Deleting build: $folder because it is $((age)) days old"
+#                rm -rf "$folder"
+#              fi
+#            fi
+#          done
+#
+#      - name: Create Index File 📄
+#        run: |
+#          echo "<html><body style='font-family:monospace;text-align:center;padding:50px;background:#e3e1dd'><h1>Storybook builds</h1><table style='font-size:20px;text-align:center;width:100%;background:#444;border-radius:4px'><tr style='background:darkseagreen'><th style='padding:12px'>Build Name</th><th style='padding:12px'>Created</th></tr>" > index.html
+#
+#          for dir in */; do
+#            commit_date=$(git log -1 --format="%at" -- "$dir")
+#            commit_date_gmt2=$(TZ="Europe/Kyiv" date -d "@$commit_date" +"%d-%m-%Y %H:%M:%S")
+#            echo "<tr style='background:#faebd7'><td style='padding:12px'><a href=\"$dir\">$dir</a></td><td style='padding:12px'>$commit_date_gmt2</td></tr>" >> index.html
+#          done
+#
+#          echo "</table></body></html>" >> index.html
+#          echo "Index file successfully updated!"
+#
+#      - name: Commit and Push 🪄
+#        run: |
+#          git config user.email "actions@github.com"
+#          git config user.name "GitHub Actions"
+#          git add .
+#          git commit -m "Update index.html & remove old builds"
+#          git push origin storybook-pages
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Upload artifact 📤
+#        uses: actions/upload-pages-artifact@v3
+#        with:
+#          name: github-pages
+#          path: ./
 
   deploy:
-    needs: create_artifact
+#    needs: create_artifact
     permissions:
       pages: write
       id-token: write
@@ -106,17 +106,18 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to GitHub Pages 🚀
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages
+#      - name: Deploy to GitHub Pages 🚀
+#        id: deployment
+#        uses: actions/deploy-pages@v4
+#        with:
+#          artifact_name: github-pages
 
       - name: Add Storybook link to PR 🔗
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
+        run: |
+          BASENAME=$(basename "${{ github.head_ref }}")
+          echo "### 🛸 Storybook has been deployed. The build available at [this link 🔗](${{ steps.deployment.outputs.page_url }}${BASENAME})"
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          message: |
-            ### 🛸 Storybook has been deployed. The build available at [this link 🔗](${{ steps.deployment.outputs.page_url }}${{ github.head_ref#*\/ }})
           comment_tag: execution
