@@ -42,7 +42,7 @@ jobs:
 #          token: ${{ secrets.GITHUB_TOKEN }}
 
   create_artifact:
-    needs: build
+#    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to "storybook-pages" branch 🛎️
