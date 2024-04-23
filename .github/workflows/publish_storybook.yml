@@ -2,12 +2,7 @@ name: Publish Storybook to GitHub Pages
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - 'src/stories/**'
   push:
-    branches:
-      - main
     paths:
       - 'src/stories/**'
 
@@ -24,6 +19,12 @@ jobs:
         env:
           ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
           ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
+
+      - name: Cache Storybook packages 💾
+        uses: actions/cache@v4
+        with:
+          path: ./node_modules
+          key: storybook-cache-${{ hashFiles('package-lock.json') }}
 
       - name: Install and Build SB 🛠️
         run: |
@@ -113,7 +114,6 @@ jobs:
           artifact_name: github-pages
 
       - name: Add Storybook link to PR 🔗
-        if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
