@@ -114,6 +114,7 @@ jobs:
           artifact_name: github-pages
 
       - name: Add Storybook link to PR 🔗
+        if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
