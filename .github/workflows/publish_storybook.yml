@@ -13,8 +13,8 @@ on:
 
 jobs:
 
-  build:
-    runs-on: ubuntu-latest
+  check_changes:
+    runs-on: mini
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -29,6 +29,13 @@ jobs:
             echo "No changes detected in src/stories, skipping workflow steps."
             exit 0
           fi
+
+  build:
+    needs: check_changes
+    runs-on: medium
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
 
       - name: Log in to Artifactory 🔑
         run: echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
@@ -60,7 +67,7 @@ jobs:
 
   create_artifact:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: medium
     steps:
       - name: Checkout to "storybook-pages" branch 🛎️
         uses: actions/checkout@v4
@@ -121,7 +128,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: medium
     steps:
       - name: Deploy to GitHub Pages 🚀
         id: deployment
