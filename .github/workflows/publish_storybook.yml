@@ -5,6 +5,9 @@ on:
   push:
     paths:
       - 'src/stories/**'
+  pull_request:
+    paths:
+      - 'src/stories/**'
 
 jobs:
 
