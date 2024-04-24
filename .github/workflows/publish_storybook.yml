@@ -32,10 +32,10 @@ jobs:
               name: 'run tests',
               head_sha: '${{ github.event.issue.pull_request.head.sha }}',
               status: 'completed',
-              conclusion: '${{ steps.tests-step.outcome }}',
+              conclusion: 'cocnccncn',
               output: {
                 title: 'Run tests',
-                summary: 'Results: ${{ steps.tests-step.outcome }}'
+                summary: 'Results: '
               },
               owner: context.repo.owner,
               repo: context.repo.repo
