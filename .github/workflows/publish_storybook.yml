@@ -25,7 +25,13 @@ jobs:
 
       - name: Check if changes occurred in src/stories
         id: check_changes
-        run: git log
+        run: |
+          if git diff --quiet HEAD^^ src/stories/; then
+            echo "Changes detected in src/stories, running workflow steps..."
+            echo "changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes detected in src/stories, skipping workflow steps."
+          fi
 
       - name: Log in to Artifactory 🔑
         if: steps.check_changes.outputs.changes == 'true'
