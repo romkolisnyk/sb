@@ -66,6 +66,7 @@ jobs:
 
   create_artifact:
     needs: build
+    if: ${{ needs.build.outputs.check_changes != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to "storybook-pages" branch 🛎️
