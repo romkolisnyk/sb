@@ -25,10 +25,14 @@ jobs:
         id: check_changes
         run: |
           if git diff --quiet ${{ github.event_path.before }} -- ${{ github.event_path.after }} src/stories/; then
+            echo ${{ github.event_path.before }}
+            echo ${{ github.event_path.after }}
             echo "Changes detected in src/stories, running workflow steps..."
             echo "changes=true" >> $GITHUB_OUTPUT
+            exit 1
           else
             echo "No changes detected in src/stories, skipping workflow steps."
+            exit 1
           fi
 
       - name: Log in to Artifactory 🔑
