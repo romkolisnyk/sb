@@ -24,7 +24,6 @@ jobs:
           fetch-depth: 0
 
       - name: Report tests check
-        if: ${{ github.event.inputs.used-branch && steps.tests-step.outcome }}
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
