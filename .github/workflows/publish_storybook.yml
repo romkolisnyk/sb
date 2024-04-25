@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
+    outputs:
+      changes: ${{ steps.changes.outputs.src }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -121,6 +123,7 @@ jobs:
 
   deploy:
     needs: build
+    if: needs.build.outputs.changes == 'true'
     permissions:
       pages: write
       id-token: write
