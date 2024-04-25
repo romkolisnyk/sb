@@ -14,10 +14,8 @@ on:
 jobs:
   check_changes:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
     outputs:
-      changes: ${{ steps.changes.outputs.changes }}
+      changes: ${{ steps.changes.outputs.changed }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -27,10 +25,7 @@ jobs:
       - name: Check if changes occurred in src/stories 🔍
         id: changes
         run: |
-          git log
-          echo "${{ github.event.before }}"
-          echo "${{ github.event.after }}"
-          echo "changes=$(git diff --quiet ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
+          echo "changes=$(git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/ && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
 
   build:
     needs: check_changes
