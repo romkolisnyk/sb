@@ -23,17 +23,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check if changes occurred in src/stories 🔍
-        uses: dorny/paths-filter@v3
         id: changes
-        with:
-          base: ${{ github.ref }}
-          filters: |
-            src:
-              - 'src/stories/**'
+        run: echo "changed=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
 
   build:
     needs: check_changes
-    if: ${{ needs.check_changes.outputs.changes == 'true' }}
+    if: "github.event_name != 'pull_request' || steps.changes.outputs.changed == 'true'"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
