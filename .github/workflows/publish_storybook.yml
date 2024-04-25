@@ -22,7 +22,7 @@ jobs:
         with:
          fetch-depth: 20
 
-      - name: Check if changes occurred in src/stories 🔍
+      - name: Check if changes occurred in src/storiessss 🔍
         id: changes
         run: |
           echo "modified=$(git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/ && echo 'false' || echo 'true')" >> $GITHUB_OUTPUT
