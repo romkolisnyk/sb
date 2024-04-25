@@ -13,6 +13,7 @@ on:
 
 jobs:
   check_changes:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     outputs:
       changes: ${{ steps.changes.outputs.modified }}
@@ -22,19 +23,18 @@ jobs:
         with:
          fetch-depth: 20
 
-      - name: Check if changes occurred in src/storiessss 🔍
+      - name: Check if changes occurred in src/stories 🔍
         id: changes
         run: |
           if git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/; then
-            echo "No changes detected in src/stories."
+            echo "No changes detected in src/stories. Skipping..."
             echo "modified=false" >> $GITHUB_OUTPUT
           else
-            echo "Changes detected in src/stories."
+            echo "Changes detected in src/stories. Continuing..."
             echo "modified=true" >> $GITHUB_OUTPUT
           fi
 
   build:
-    needs: check_changes
     if: needs.check_changes.outputs.changes == 'true'
     runs-on: ubuntu-latest
     steps:
