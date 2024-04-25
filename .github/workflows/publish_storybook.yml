@@ -13,7 +13,6 @@ on:
 
 jobs:
   check_changes:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     outputs:
       changes: ${{ steps.changes.outputs.modified }}
@@ -35,6 +34,7 @@ jobs:
           fi
 
   build:
+    needs: check_changes
     if: needs.check_changes.outputs.changes == 'true'
     runs-on: ubuntu-latest
     steps:
