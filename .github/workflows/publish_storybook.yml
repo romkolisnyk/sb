@@ -15,48 +15,48 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 50
 
-      - name: Check if changes occurred in src/stories
-        id: check_changes
-        run: |
-          git log
-          changed_files=$(git diff --name-only HEAD^ HEAD)
-          if echo "$changed_files" | grep -q '^src/stories/'; then
-            echo "true"
-            echo "changes=true" >> $GITHUB_OUTPUT
-            exit 1
-          else
-            echo "false"
-            echo "changes=false" >> $GITHUB_OUTPUT
-            exit 1
-          fi
+      - name: Check if changes occurred in src/stories 🔍
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'src/stories'
 
       - name: Log in to Artifactory 🔑
+        if: steps.changes.outputs.src == 'true'
         run: echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
         env:
           ARTIFACTORY_REGISTRY: artifactory.infrateam.xyz/artifactory/api/npm/npm/
           ARTIFACTORY_TOKEN: ${{ secrets.STORYBOOK_TOKEN }}
 
       - name: Cache Storybook packages 💾
+        if: steps.changes.outputs.src == 'true'
         uses: actions/cache@v4
         with:
           path: ./node_modules
           key: storybook-cache-${{ hashFiles('package-lock.json') }}
 
       - name: Install and Build SB 🛠️
+        if: steps.changes.outputs.src == 'true'
         run: |
           npm install
           npm run build-storybook
 
       - name: Set name for the build 🌱
+        if: steps.changes.outputs.src == 'true'
         run: echo "BRANCH_NAME=$(basename ${{ github.head_ref || github.ref_name }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Put the build into branch-named folder 📂
+        if: steps.changes.outputs.src == 'true'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: storybook-pages
@@ -65,12 +65,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout to "storybook-pages" branch 🛎️
+        if: steps.changes.outputs.src == 'true'
         uses: actions/checkout@v4
         with:
           ref: storybook-pages
           fetch-depth: 0
 
       - name: Remove builds older than 1 days 🗑️
+        if: steps.changes.outputs.src == 'true'
         run: |
           for folder in */; do
             if [ "$folder" != "main/" ]; then
@@ -86,6 +88,7 @@ jobs:
           done
 
       - name: Create Index File 📄
+        if: steps.changes.outputs.src == 'true'
         run: |
           echo "<html><body style='font-family:monospace;text-align:center;padding:50px;background:#e3e1dd'><h1>Storybook builds</h1><table style='font-size:20px;text-align:center;width:100%;background:#444;border-radius:4px'><tr style='background:darkseagreen'><th style='padding:12px'>Build Name</th><th style='padding:12px'>Created</th></tr>" > index.html
 
@@ -99,6 +102,7 @@ jobs:
           echo "Index file successfully updated!"
 
       - name: Commit and Push 🪄
+        if: steps.changes.outputs.src == 'true'
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
@@ -109,6 +113,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifact 📤
+        if: steps.changes.outputs.src == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
