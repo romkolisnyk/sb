@@ -27,14 +27,14 @@ jobs:
       - name: Check if changes occurred in src/stories 🔍
         id: changes
         run: |
-          echo git log
+          git log
           echo "${{ github.event.before }}"
           echo "${{ github.event.after }}"
-          echo "changed=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
+          echo "changed=$(git diff --quiet ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
 
   build:
     needs: check_changes
-    if: github.event_name != 'pull_request' || needs.check_changes.outputs.changes == 'true'
+    if: needs.check_changes.outputs.changes == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
