@@ -25,7 +25,13 @@ jobs:
       - name: Check if changes occurred in src/storiessss 🔍
         id: changes
         run: |
-          echo "modified=$(git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/ && echo 'false' || echo 'true')" >> $GITHUB_OUTPUT
+          if git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/; then
+            echo "No changes detected in src/stories."
+            echo "modified=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in src/stories."
+            echo "modified=true" >> $GITHUB_OUTPUT
+          fi
 
   build:
     needs: check_changes
