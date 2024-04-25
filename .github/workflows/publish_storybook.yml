@@ -24,6 +24,7 @@ jobs:
       - name: Check if changes occurred in src/stories
         id: check_changes
         run: |
+          git log
           changed_files=$(git diff --name-only HEAD^ HEAD)
           if echo "$changed_files" | grep -q '^src/stories/'; then
             echo "true"
