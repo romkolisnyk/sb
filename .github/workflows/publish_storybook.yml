@@ -17,12 +17,12 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      changes: ${{ steps.changes.outputs.changed }}
+      changes: ${{ steps.changes.outputs.changes }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
         with:
-         fetch-depth: 50
+         fetch-depth: 20
 
       - name: Check if changes occurred in src/stories 🔍
         id: changes
@@ -30,7 +30,7 @@ jobs:
           git log
           echo "${{ github.event.before }}"
           echo "${{ github.event.after }}"
-          echo "changed=$(git diff --quiet ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
+          echo "changes=$(git diff --quiet ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
 
   build:
     needs: check_changes
