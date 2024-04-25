@@ -24,7 +24,11 @@ jobs:
 
       - name: Check if changes occurred in src/stories 🔍
         id: changes
-        run: echo "changed=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
+        run: |
+          git log
+          echo "${{ github.event.before }}"
+          echo "${{ github.event.after }}"
+          echo "changed=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '^src/stories/')" >> $GITHUB_OUTPUT
 
   build:
     needs: check_changes
