@@ -26,12 +26,14 @@ jobs:
         uses: dorny/paths-filter@v3
         id: changes
         with:
+          base: ${{ github.ref }}
           filters: |
             src:
               - 'src/stories/**'
 
   build:
-    if: needs.check_changes.outputs.changes == 'true'
+    needs: check_changes
+    if: ${{ needs.check_changes.outputs.changes == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
