@@ -14,7 +14,6 @@ on:
 jobs:
   check_changes:
     runs-on: ubuntu-latest
-#    if: github.event_name != 'pull_request' || github.event.action == 'synchronize'
     outputs:
       changes: ${{ steps.changes.outputs.modified }}
     steps:
@@ -27,6 +26,7 @@ jobs:
         id: changes
         run: |
           echo ${{ github.event_name }} --- ${{ github.event.action }}
+          echo ${{ github.event.before }} --- ${{ github.event.after }}
           if git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/; then
             echo "No changes detected in src/stories. Skipping..."
             echo "modified=false" >> $GITHUB_OUTPUT
@@ -35,13 +35,13 @@ jobs:
             echo "modified=true" >> $GITHUB_OUTPUT
           fi
 
-  build:
-    needs: check_changes
-    if: needs.check_changes.outputs.changes == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
+#  build:
+#    needs: check_changes
+#    if: needs.check_changes.outputs.changes == 'true'
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout 🛎️
+#        uses: actions/checkout@v4
 #
 #      - name: Log in to Artifactory 🔑
 #        run: echo "//${ARTIFACTORY_REGISTRY}/:_authToken=${ARTIFACTORY_TOKEN}" > .npmrc
