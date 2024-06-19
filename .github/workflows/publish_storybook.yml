@@ -26,6 +26,7 @@ jobs:
       - name: Check if changes occurred in src/stories 🔍
         id: changes
         run: |
+          echo ${{ github.event_name }} --- ${{ github.event.action }}
           if git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/; then
             echo "No changes detected in src/stories. Skipping..."
             echo "modified=false" >> $GITHUB_OUTPUT
