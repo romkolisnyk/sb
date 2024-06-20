@@ -33,7 +33,7 @@ jobs:
             echo "Changes detected in src/stories folder. Continuing the workflow..."
             echo "modified=true" >> $GITHUB_OUTPUT
           else
-            echo "No changes detected in src/stories. Skipping..."
+            echo "No changes detected in src/stories. Skipping the workflow..."
             echo "modified=false" >> $GITHUB_OUTPUT
           fi
 
