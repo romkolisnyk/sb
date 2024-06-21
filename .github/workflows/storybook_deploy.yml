@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 20
 
-      - name: Check if changes occurred in jsf-ui folder 🔍
+      - name: Check if changes occurred in src/stories folder 🔍
         id: changes
         run: |
           # Will return `true` once, only on PR init (on further pushes `github.event.action = synchronize`)
