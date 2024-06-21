@@ -1,4 +1,4 @@
-name: Publish Storybook to GitHub Pages
+name: Deploy Storybook to GitHub Pages
 
 on:
   workflow_dispatch:
@@ -7,9 +7,8 @@ on:
       - main
     paths:
       - 'src/stories/**'
-  pull_request:
-    paths:
-      - 'src/stories/**'
+    tags:
+      - 'storybook-deploy'
 
 jobs:
   check_changes:
@@ -22,13 +21,13 @@ jobs:
         with:
           fetch-depth: 20
 
-      - name: Check if changes occurred in src/stories 🔍
+      - name: Check if changes occurred in jsf-ui folder 🔍
         id: changes
         run: |
           # Will return `true` once, only on PR init (on further pushes `github.event.action = synchronize`)
           if [[ "${{ github.event_name }}" == 'pull_request' && "${{ github.event.action }}" == 'opened' ]]; then
             echo "modified=true" >> $GITHUB_OUTPUT
-          
+
           # Will return 'true' by '!' operator that inverts bash status code:
           # 'git diff --quiet' returns '0' if there are no changes (true), '1' if there are changes (false)
           elif ! git diff --quiet ${{ github.event.before }} ${{ github.event.after }} src/stories/; then
