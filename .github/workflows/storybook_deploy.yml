@@ -16,7 +16,8 @@ jobs:
   check_changes:
     runs-on: ubuntu-latest
     outputs:
-      changes: ${{ steps.changes.outputs.modified }}
+      push_changes: ${{ steps.push_changes.outputs.modified }}
+      pr_changes: ${{ steps.pr_changes.outputs.modified }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
