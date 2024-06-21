@@ -3,12 +3,12 @@ name: Deploy Storybook to GitHub Pages
 on:
   workflow_dispatch:
   push:
+    tags:
+      - 'storybook-deploy'
     branches:
       - main
     paths:
       - 'src/stories/**'
-    tags:
-      - 'storybook-deploy'
 
 jobs:
   check_changes:
