@@ -14,7 +14,9 @@ on:
 
 jobs:
   check_changes:
-    if: github.event.label.name == 'storybook-deploy'
+    if: |
+      github.event.label.name == 'storybook-deploy' ||
+      contains(github.event.pull_request.labels.*.name, 'storybook-deploy')
     runs-on: ubuntu-latest
     outputs:
       changes: ${{ steps.changes.outputs.modified }}
