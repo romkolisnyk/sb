@@ -3,15 +3,18 @@ name: Deploy Storybook to GitHub Pages
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'storybook-deploy'
     branches:
       - main
+    paths:
+      - 'src/stories/**'
+  pull_request:
+    types: [ labeled ]
     paths:
       - 'src/stories/**'
 
 jobs:
   check_changes:
+    if: contains(github.event.label.name, 'storybook-deploy')
     runs-on: ubuntu-latest
     outputs:
       changes: ${{ steps.changes.outputs.modified }}
