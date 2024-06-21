@@ -42,7 +42,7 @@ jobs:
               echo "Changes detected in src/stories folder on PR with label 'storybook-deploy'. Continuing the workflow..."
               echo "modified=true" >> $GITHUB_OUTPUT
           else
-            echo "No changes detected in jsf-ui folder. Skipping the workflow..."
+            echo "No changes detected in src/stories folder. Skipping the workflow..."
             echo "modified=false" >> $GITHUB_OUTPUT
           fi
 
